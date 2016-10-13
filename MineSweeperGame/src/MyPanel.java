@@ -19,7 +19,10 @@ public class MyPanel extends JPanel {
 	public int mouseDownGridX = 0;
 	public int mouseDownGridY = 0;
 	public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
-	public int[][] squaresContainingMines = new int[TOTAL_COLUMNS][TOTAL_ROWS];
+	
+    boolean[][]minesInPlay= new boolean[TOTAL_COLUMNS][TOTAL_ROWS];
+	private int[][]squaresContainingMines;
+	private  int[][]playingField;
 
 	
 	public MyPanel() {   //This is the constructor... this code runs first to initialize
@@ -87,30 +90,58 @@ public class MyPanel extends JPanel {
 	// will generate and place mines randomly
 	
 	public void mineGenerator() {
-		Random randomNumber = new Random();
-		for (int i =0; i < totalMines;i++){
-			int rowValue = randomNumber.nextInt(8)+1;
-			int columnValue = randomNumber.nextInt(8)+1;
+		Random generator = new Random();
+		int currentMines = 0;
+		
+		while (currentMines< totalMines){
+			int x = generator.nextInt(TOTAL_COLUMNS);
+			int y = generator.nextInt(TOTAL_ROWS);
 			
-		while (containsMine(columnValue,rowValue)) {
-			 
-			 rowValue = randomNumber.nextInt(8)+1;
-			 columnValue = randomNumber.nextInt(8)+1;
-		}
-			System.out.println("X: " + (columnValue) + "," + "Y: " + (rowValue) );
-			
-			squaresContainingMines[columnValue][rowValue] = 1;
+			if (minesInPlay[x][y]!=true) {
+				minesInPlay[x][y]= true;
+				currentMines++;
+				
+			}
 		}
 	}
-		
-		public boolean containsMine(int x,int y) 
-		{
-			if(this.squaresContainingMines[x][y]==1)
-		{
-			return true;
-		}
-			return false;
-		}
+	
+	//Will Locate and Identify mines
+	
+	public void squaresContainingMines(boolean[][]minesInPlay){
+		int foundMines=0;
+		squaresContainingMines = new int[minesInPlay.length][minesInPlay.length];
+		for(int x = 0 ; x < squaresContainingMines.length ; x++) {
+			for (int y = 0; y < squaresContainingMines[x].length ; y++) {
+				if ( x-1 > -1 && y-1 > -1 && minesInPlay[x-1][y-1]) {
+					foundMines++;
+				}
+				if ( y-1 > -1 &&  minesInPlay[x][y-1]) {
+					foundMines++;
+				}
+				if (x+1 < squaresContainingMines.length && y-1 > -1 && minesInPlay[x+1][y-1]){
+					foundMines++;
+				}
+				if (x-1 > -1 && minesInPlay[x-1][y]){
+					foundMines++;
+				}
+				if (x+1 < squaresContainingMines.length && minesInPlay[x+1][y]){
+					foundMines++;
+				}
+				if (x-1 >-1 && y+1 < squaresContainingMines.length && minesInPlay[x-1][y+1]){
+					foundMines++;
+				}
+				if (y+1 < squaresContainingMines.length && minesInPlay[x][y+1]){
+					foundMines++;
+				}
+				if (x+1 < squaresContainingMines.length && y+1 < squaresContainingMines.length && minesInPlay[x+1][y+1]){
+					foundMines++;
+				}
+				
+				squaresContainingMines[x][y] = foundMines;
+				foundMines = 0; //resets the mine count to avoid recounting found mines
+			}
+		}		
+	}
 	
 	public int getGridX(int x, int y) {
 		Insets myInsets = getInsets();

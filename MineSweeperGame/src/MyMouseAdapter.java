@@ -34,7 +34,13 @@ public class MyMouseAdapter extends MouseAdapter {
 			myPanel.repaint();
 			break;
 		case 3:		//Right mouse button
-			//Do nothing
+			Component r = e.getComponent();
+			while (!(r instanceof JFrame)) {
+				r = r.getParent();
+				if (r == null) {
+					return;
+				}
+			}
 			break;
 		default:    //Some other button (2 = Middle mouse button, etc.)
 			//Do nothing
@@ -51,6 +57,11 @@ public class MyMouseAdapter extends MouseAdapter {
 					return;
 				}
 			}
+			
+			
+
+			
+			
 			JFrame myFrame = (JFrame)c;
 			MyPanel myPanel = (MyPanel) myFrame.getContentPane().getComponent(0);  //Can also loop among components to find MyPanel
 			Insets myInsets = myFrame.getInsets();
