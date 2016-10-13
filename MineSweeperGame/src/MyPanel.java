@@ -19,7 +19,7 @@ public class MyPanel extends JPanel {
 	public int mouseDownGridX = 0;
 	public int mouseDownGridY = 0;
 	public Color[][] colorArray = new Color[TOTAL_COLUMNS][TOTAL_ROWS];
-	public int[][] squaresContainingMines = new int[0][0];
+	public int[][] squaresContainingMines = new int[TOTAL_COLUMNS][TOTAL_ROWS];
 
 	
 	public MyPanel() {   //This is the constructor... this code runs first to initialize
@@ -103,8 +103,13 @@ public class MyPanel extends JPanel {
 		}
 	}
 		
-		public boolean containsMine(int x,int y) {
+		public boolean containsMine(int x,int y) 
+		{
+			if(this.squaresContainingMines[x][y]==1)
+		{
 			return true;
+		}
+			return false;
 		}
 	
 	public int getGridX(int x, int y) {
